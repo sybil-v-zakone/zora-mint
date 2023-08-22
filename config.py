@@ -27,6 +27,9 @@ nfts_to_mint = {
     "0xd46760C832960eEBd81391aC5DC8502A778B24Ec": 1,
 }
 
+# использование прокси; True - прокси используются, False - не используются
+use_proxy = True
+
 # автогенерация базы данных; True - вкл, False - выкл
 database_autocreate = True
 

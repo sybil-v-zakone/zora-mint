@@ -5,13 +5,20 @@ from loguru import logger
 
 from models.data_item import DataItem
 from utils import read_file_by_lines, read_from_json
-from config import private_keys_file, proxies_file, nfts_to_mint, database_file, database_autocreate
+from config import (
+    private_keys_file,
+    proxies_file,
+    nfts_to_mint,
+    database_file,
+    database_autocreate,
+    use_proxy
+)
 
 
 class Database:
-    def __init__(self):
+    def __init__(self, create_once=False):
         self.data: list[DataItem] = list[DataItem]()
-        if database_autocreate:
+        if database_autocreate or create_once:
             self.create()
             self.accounts_remaining = len(self.data)
         else:
@@ -45,10 +52,14 @@ class Database:
             private_keys = read_file_by_lines(private_keys_file)
             proxies = read_file_by_lines(proxies_file)
 
+            if use_proxy and len(private_keys) != len(proxies):
+                logger.error("\'use_proxy\' is set to True, but wallets and proxies files\' length doesn't match")
+                exit()
+
             try:
                 for key in private_keys:
                     key_index = private_keys.index(key)
-                    proxy = proxies[key_index] if len(proxies) > 0 else None
+                    proxy = proxies[key_index] if use_proxy else None
                     nfts_start_list = list(nfts_to_mint)
                     data_item = DataItem(
                         private_key=key,

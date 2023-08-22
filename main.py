@@ -2,6 +2,7 @@ from loguru import logger
 
 from core.heater import Heater
 from config import database_autocreate
+from models.database import Database
 
 start_message = rf'''
 
@@ -43,7 +44,7 @@ def main():
     module = input("Start module: ")
 
     if module == '1':
-        pass
+        Database(create_once=True)
     elif module == '2':
         heater = Heater()
         heater.warmup()
