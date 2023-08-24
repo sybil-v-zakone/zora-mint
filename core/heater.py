@@ -38,12 +38,11 @@ class Heater:
             try:
                 tx_res, tx_message = active_client.mint(random_nft, nfts_to_mint[random_nft])
 
+                active_wallet.nfts_to_mint.remove(random_nft)
                 if tx_res:
                     logger.success(tx_message)
-                    active_wallet.nfts_to_mint.remove(random_nft)
                 else:
                     logger.error(tx_message)
-                    active_wallet.nfts_to_mint.remove(random_nft)
                     active_wallet.error_contracts.append(random_nft)
 
                 self.db.update()

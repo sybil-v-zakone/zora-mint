@@ -79,22 +79,7 @@ class Database:
         for item in self.data:
             if len(item.nfts_to_mint) == 0:
                 self.accounts_remaining -= 1
+            if len(item.nfts_to_mint) == 0 and len(item.error_contracts) == 0:
+                self.data.remove(item)  
         self.dump()
         logger.success("Database has been updated")
-
-    def get_random_data_item(self) -> DataItem | None:
-        try:
-            if len(self.data) == 0:
-                logger.success("Database is empty. Nothing to warm up")
-                return None
-
-            wallets_for_warmup = [d for d in self.data if len(d.nfts_to_mint) != 0]
-
-            if len(wallets_for_warmup) != len(self.data):
-                logger.success("Database still contains wallets that had issues when minting")
-
-            random_wallet = random.choice(wallets_for_warmup)
-
-            return random_wallet
-        except Exception as e:
-            logger.error(f"Error while trying to get random item from database: {str(e)}")
